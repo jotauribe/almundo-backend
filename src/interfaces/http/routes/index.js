@@ -5,4 +5,4 @@ const APIRouter = Express.Router();
 
 APIRouter.use('/hotel', hotelRouter);
 
-module.export = APIRouter;
+module.exports = APIRouter;

@@ -1,9 +1,9 @@
-const createError = require('http-errors');
 const Express = require('express');
+const createError = require('http-errors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const hotelRouter = require('./routes/hotels');
+const hotelRouter = require('./routes');
 
 const server = Express();
 
@@ -12,11 +12,6 @@ server.use(logger('dev'));
 server.use(Express.json());
 server.use(Express.urlencoded({ extended: false }));
 server.use(cookieParser());
-
-// catch 404 and forward to error handler
-server.use(function(req, res, next) {
-  next(createError(404));
-});
 
 // error handler
 server.use(function(err, req, res, next) {
@@ -29,6 +24,13 @@ server.use(function(err, req, res, next) {
 });
 
 // endpoints
-server.use('/hotel', () => 'hotelRouter');
+server.use('/api', hotelRouter);
+
+// catch 404 and forward to error handler
+server.use(function(req, res, next) {
+  console.log(process.env);
+  if (req.app.get('env') === 'development') return next(createError(404));
+  next();
+});
 
 module.exports = server;

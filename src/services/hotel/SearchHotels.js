@@ -2,11 +2,13 @@ const hotelList = require('../../data/hotels');
 
 module.exports = () => ({
   withName: function(name) {
-    const regex = new RegExp(name, 'ig');
+    const regex = new RegExp(name, 'gi');
 
-    if (isDefined(name))
+    if (isDefined(name)) {
+      const previousCriteria = this.criteria ? this.criteria : () => true;
       this.criteria = hotel =>
-        regex.test(hotel.name) && (this.criteria(hotel) || true);
+        regex.test(hotel.name) && previousCriteria(hotel);
+    }
 
     return this;
   },
@@ -14,25 +16,29 @@ module.exports = () => ({
     const lowerLimit = from;
     const upperLimit = to;
 
-    if (isDefined(lowerLimit) || isDefined(upperLimit))
+    if (isDefined(lowerLimit) && isDefined(upperLimit)) {
+      console.log('HOLA', this);
+      const previousCriteria = this.criteria ? this.criteria : () => true;
+
       this.criteria = hotel =>
         hotel.stars >= lowerLimit &&
         hotel.stars <= upperLimit &&
-        (this.criteria(hotel) || true);
+        previousCriteria(hotel);
+    }
 
     return this;
   },
   execute: function() {
-    const hotels = [];
+    const result = [];
 
     hotelList.forEach(hotel => {
-      if (this.criteria(hotel)) hotels.push(hotel);
+      if (this.criteria(hotel)) result.push(hotel);
     });
 
-    return hotels;
+    return result;
   }
 });
 
 function isDefined(value) {
-  return value !== null || value !== undefined;
+  return value !== null && value !== undefined;
 }
