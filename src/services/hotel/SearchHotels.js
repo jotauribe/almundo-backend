@@ -1,8 +1,8 @@
-const hotelList = require('../../data/hotels');
+const hotelList = require("../../data/hotels");
 
 module.exports = () => ({
   withName: function(name) {
-    const regex = new RegExp(name, 'gi');
+    const regex = new RegExp(name, "gi");
 
     if (isDefined(name)) {
       const previousCriteria = this.criteria ? this.criteria : () => true;
@@ -17,7 +17,6 @@ module.exports = () => ({
     const upperLimit = to;
 
     if (isDefined(lowerLimit) && isDefined(upperLimit)) {
-      console.log('HOLA', this);
       const previousCriteria = this.criteria ? this.criteria : () => true;
 
       this.criteria = hotel =>
@@ -29,6 +28,8 @@ module.exports = () => ({
     return this;
   },
   execute: function() {
+    if (!this.criteria) return hotelList;
+
     const result = [];
 
     hotelList.forEach(hotel => {
