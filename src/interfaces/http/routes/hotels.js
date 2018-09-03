@@ -4,13 +4,14 @@ var { hotelService } = require('../../../services');
 
 router.get('/', function(req, res, next) {
   try {
-    const { name, minStars, maxStars } = req.query;
+    const { name, stars } = req.query;
 
     const hotelSearch = hotelService.searchHotels();
+    const starArray = stars ? stars.split(',').map(s => parseInt(s)) : [];
 
     result = hotelSearch
       .withName(name)
-      .withStars({ from: minStars, to: maxStars })
+      .withStars(starArray)
       .execute();
 
     res.send(result);

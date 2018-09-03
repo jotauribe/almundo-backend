@@ -1,8 +1,8 @@
-const hotelList = require("../../data/hotels");
+const hotelList = require('../../data/hotels');
 
 module.exports = () => ({
   withName: function(name) {
-    const regex = new RegExp(name, "gi");
+    const regex = new RegExp(name, 'gi');
 
     if (isDefined(name)) {
       const previousCriteria = this.criteria ? this.criteria : () => true;
@@ -12,17 +12,12 @@ module.exports = () => ({
 
     return this;
   },
-  withStars: function({ from, to }) {
-    const lowerLimit = from;
-    const upperLimit = to;
-
-    if (isDefined(lowerLimit) && isDefined(upperLimit)) {
+  withStars: function(stars) {
+    if (isDefined(stars) && Array.isArray(stars) && stars.length > 0) {
       const previousCriteria = this.criteria ? this.criteria : () => true;
 
       this.criteria = hotel =>
-        hotel.stars >= lowerLimit &&
-        hotel.stars <= upperLimit &&
-        previousCriteria(hotel);
+        stars.includes(parseInt(hotel.stars)) && previousCriteria(hotel);
     }
 
     return this;
